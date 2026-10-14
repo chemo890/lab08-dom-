@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Lab 08 - DOM, eventos y objetos</title> 
+  <style>     body { font-family: Arial, sans-serif; max-width: 640px; margin: 30px auto; }     section { border: 1px solid #ccc; padding: 12px; margin-bottom: 16px; } 
+    .destacado { background: #fff3cd; } 
+    .error { color: #c0392b; } 
+  </style> 
+</head> 
+<body> 
+  <h1 id="titulo">Mi primera pagina interactiva</h1> 
+  
+  <section> 
+    <h2>Ejercicio 2: DOM</h2> 
+    <p class="mensaje">Este texto va a cambiar.</p>     <ul id="lista"> 
+      <li>HTML</li> 
+      <li>CSS</li> 
+    </ul> 
+  </section> 
+  
+  <section> 
+    <h2>Ejercicio 3: Click</h2> 
+    <button id="btnSumar">Sumar 1</button> 
+    <button id="btnReiniciar">Reiniciar</button> 
+    <p>Clics: <span id="contador">0</span></p>   </section> 
+  
+  <section> 
+    <h2>Ejercicio 4: Input y submit</h2> 
+    <input id="nombre" type="text" placeholder="Escribe tu nombre">     <p id="saludo">Hola, ...</p> 
+    <form id="formulario"> 
+      <input id="correo" type="text" placeholder="Correo"> 
+      <button type="submit">Enviar</button> 
+    </form> 
+    <p id="resultado"></p> 
+  </section> 
+  
+  <section> 
+    <h2>Ejercicio 5: Clases y objetos</h2> 
+    <ul id="productos"></ul> 
+  </section> 
+  
+  <section> 
+    <h2>Ejercicio 6: Todo junto</h2> 
+    <form id="formProducto"> 
+      <input id="prodNombre" type="text" placeholder="Nombre del producto"> 
+      <input id="prodPrecio" type="number" step="0.01" placeholder="Precio"> 
+      <button type="submit">Agregar</button> 
+    </form> 
+    <ul id="carrito"></ul> 
+    <p>Total: S/ <span id="total">0.00</span></p>   </section> 
+  
+  <script src="app.js"></script> 
+</body> 
+</html> 
