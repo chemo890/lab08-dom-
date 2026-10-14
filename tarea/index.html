@@ -3,25 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi día — versión 2</title>
-  <style>body{font:18px system-ui;background:#f5f3ec;color:#243b2a;max-width:640px;margin:60px auto;padding:24px}li{padding:16px;background:white;margin-bottom:12px;border-radius:12px}</style>
+  <meta name="description" content="Organiza tu día paso a paso. Agrega, busca y completa tus tareas en un espacio sencillo y tranquilo.">
+  <meta name="theme-color" content="#264b38">
+  <title>Mi día · Un paso a la vez</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23264b38'/%3E%3Cpath d='M9 19C9 9 22 8 24 8c0 12-7 17-15 11Zm1 5 11-12' fill='none' stroke='%23edf2df' stroke-width='2'/%3E%3C/svg%3E">
 </head>
 <body>
-  <main>
-    <p>LAB 08 · VERSIÓN 2</p>
-    <h1>Mi día</h1>
-    <p>Segundo paso: agregar, marcar y borrar con eventos.</p>
-    <form id="formulario" novalidate>
-      <label for="titulo">Nueva tarea</label>
-      <input id="titulo" name="titulo" maxlength="80" aria-describedby="mensaje">
-      <button type="submit">Agregar tarea</button>
-      <p id="mensaje" role="status" aria-live="polite"></p>
-    </form>
-    <label for="buscador">Buscar tareas</label>
-    <input id="buscador" type="search">
-    <ul id="lista-tareas"></ul>
-    <p id="resumen"></p>
+  <a class="skip-link" href="#contenido">Ir al contenido</a>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 15C5 6 16 4 20 4c0 10-5 15-13 13M4 21 16 9"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 19V13M12 19V9M19 19V5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  </svg>
+
+  <!-- Parte 1: navegación y progreso general. -->
+  <aside class="sidebar">
+    <a class="brand" href="#contenido" aria-label="Mi día, inicio">
+      <span class="brand-mark"><svg class="icon"><use href="#i-leaf"></use></svg></span>
+      <span>mi día<span class="brand-dot">.</span></span>
+    </a>
+    <p class="nav-label">TU ESPACIO</p>
+    <nav aria-label="Secciones de la página">
+      <a class="nav-item active" href="#contenido"><svg class="icon"><use href="#i-grid"></use></svg>Mi tablero<span class="nav-indicator"></span></a>
+      <a class="nav-item" href="#nueva-tarea"><svg class="icon"><use href="#i-plus"></use></svg>Nueva tarea</a>
+      <a class="nav-item" href="#mi-lista"><svg class="icon"><use href="#i-check"></use></svg>Mis tareas</a>
+    </nav>
+    <div class="sidebar-note">
+      <svg class="plant" viewBox="0 0 140 130" fill="none" aria-hidden="true">
+        <path d="M69 112V59m0 21C35 80 29 62 28 46c26 0 40 13 41 34Zm1-20c0-31 22-40 39-43-1 27-11 43-39 43Zm0 38c32 0 41-20 42-32-24 0-38 10-42 32Z" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"/>
+        <path d="M52 110h35l-5 16H57l-5-16Z" fill="currentColor" opacity=".2"/><path d="M52 110h35l-5 16H57l-5-16Z" stroke="currentColor" stroke-width="2.3"/>
+      </svg>
+      <p>Pequeños pasos.<br><em>Grandes avances.</em></p>
+      <span>No tienes que hacerlo todo hoy.</span>
+    </div>
+    <div class="sidebar-footer"><span class="tiny-dot"></span>Un espacio para enfocarte</div>
+  </aside>
+
+  <main id="contenido" class="main">
+    <header class="topbar">
+      <p class="breadcrumb">MI ESPACIO <span>/</span> <strong>ORGANIZADOR</strong></p>
+      <div class="save-status"><span class="tiny-dot"></span><span id="guardado-texto">Guardado en este navegador</span></div>
+    </header>
+
+    <section class="intro" aria-labelledby="titulo-pagina">
+      <div><p class="eyebrow"><span class="sun" aria-hidden="true">☀</span> HAZ QUE HOY CUENTE</p><h1 id="titulo-pagina">Un paso <em>a la vez.</em></h1><p class="intro-copy">Saca las ideas de tu cabeza. Dales un lugar y empieza por una.</p></div>
+      <div class="date-pill"><span>HOY</span><time id="fecha"></time></div>
+    </section>
+
+    <!-- Parte 2: resumen que cambia con las acciones del usuario. -->
+    <section id="resumen-dia" class="stats" aria-label="Resumen de tus tareas">
+      <div class="stat-card"><span class="stat-icon neutral"><svg class="icon"><use href="#i-grid"></use></svg></span><div><p>En tu lista</p><strong id="total">0</strong><span class="stat-caption">tareas en total</span></div></div>
+      <div class="stat-card"><span class="stat-icon peach"><svg class="icon"><use href="#i-chart"></use></svg></span><div><p>Por hacer</p><strong id="pendientes">0</strong><span class="stat-caption">un paso a la vez</span></div></div>
+      <div class="stat-card"><span class="stat-icon green"><svg class="icon"><use href="#i-check"></use></svg></span><div><p>Completadas</p><strong id="completadas">0</strong><span class="stat-caption">¡cada avance suma!</span></div></div>
+    </section>
+
+    <div class="workspace">
+      <div class="left-column">
+        <!-- Parte 3: formulario y validación visible. -->
+        <section id="nueva-tarea" class="panel form-panel" aria-labelledby="titulo-formulario">
+          <div class="section-heading"><span class="step">01</span><p>UN NUEVO COMIENZO</p></div>
+          <h2 id="titulo-formulario">¿Qué tienes en mente?</h2>
+          <p class="section-copy">Algo grande empieza con una tarea pequeña.</p>
+          <form id="formulario" novalidate>
+            <label for="titulo">Tu próxima tarea</label>
+            <input id="titulo" name="titulo" type="text" placeholder="Ej. Repasar mis apuntes" minlength="3" maxlength="80" autocomplete="off" aria-describedby="ayuda-titulo mensaje" required>
+            <div id="ayuda-titulo" class="field-help"><span>Entre 3 y 80 caracteres</span><span id="contador">0 / 80</span></div>
+            <label for="prioridad">¿Qué tan importante es?</label>
+            <select id="prioridad" name="prioridad"><option value="baja">Baja · puede esperar</option><option value="media" selected>Media · a su tiempo</option><option value="alta">Alta · primero esto</option></select>
+            <button class="primary-button" type="submit"><svg class="icon"><use href="#i-plus"></use></svg>Agregar a mi lista<svg class="icon arrow"><use href="#i-arrow"></use></svg></button>
+            <p id="mensaje" class="form-message" role="status" aria-live="polite">Dale un nombre claro y empieza cuando quieras.</p>
+          </form>
+        </section>
+        <section class="progress-card" aria-labelledby="titulo-progreso">
+          <div><p class="eyebrow">A TU PROPIO RITMO</p><h2 id="titulo-progreso">Cada paso cuenta.</h2><p id="progreso-mensaje">Tu próximo paso te espera.</p></div>
+          <div class="progress-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-track" cx="50" cy="50" r="41"/><circle id="anillo-progreso" class="ring-fill" cx="50" cy="50" r="41"/></svg><strong id="progreso">0%</strong></div>
+        </section>
+      </div>
+
+      <!-- Parte 4: búsqueda, filtros y lista creada con createElement. -->
+      <section id="mi-lista" class="panel list-panel" aria-labelledby="titulo-lista">
+        <div class="list-heading"><div><div class="section-heading"><span class="step">02</span><p>PON TUS IDEAS EN ORDEN</p></div><h2 id="titulo-lista">Tu lista, a tu ritmo.</h2></div><span class="list-decoration" aria-hidden="true">✳</span></div>
+        <div class="search-field"><svg class="icon"><use href="#i-search"></use></svg><label class="sr-only" for="buscador">Buscar en tus tareas</label><input id="buscador" type="search" placeholder="Buscar en mis tareas…" autocomplete="off"></div>
+        <div id="filtros" class="filters" role="group" aria-label="Filtrar tareas por estado"><button type="button" data-filtro="todas" aria-pressed="true">Todas <span id="cuenta-todas">0</span></button><button type="button" data-filtro="pendientes" aria-pressed="false">Pendientes <span id="cuenta-pendientes">0</span></button><button type="button" data-filtro="completadas" aria-pressed="false">Completadas <span id="cuenta-completadas">0</span></button></div>
+        <div class="list-meta"><p id="resultado" role="status" aria-live="polite"></p><span>PRIORIDAD</span></div>
+        <ul id="lista-tareas" class="task-list" aria-label="Tareas"></ul>
+        <div id="estado-vacio" class="empty-state" hidden><span aria-hidden="true">✧</span><h3 id="vacio-titulo">Un espacio para empezar.</h3><p id="vacio-mensaje">Agrega tu primera tarea desde el formulario.</p><button id="limpiar-filtros" type="button" class="text-button" hidden>Ver todas mis tareas</button></div>
+        <div class="list-footer"><span><span class="tiny-dot"></span> Marca una tarea y celebra el avance.</span><button id="limpiar-completadas" type="button" class="text-button" disabled>Limpiar completadas</button></div>
+        <div id="aviso" class="undo-notice" role="status" aria-live="polite" hidden><span id="aviso-texto"></span><button id="deshacer" type="button">Deshacer</button></div>
+      </section>
+    </div>
+    <footer class="page-footer"><p>Menos ruido. Más espacio para lo que importa.</p><span>HECHO PARA TU DÍA <svg class="icon"><use href="#i-leaf"></use></svg></span></footer>
+    <noscript>Activa JavaScript en tu navegador para usar la lista de tareas.</noscript>
   </main>
-  <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
